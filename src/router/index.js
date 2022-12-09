@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Layout from '../layout';
-import store from "../store";
+import Layout from '../layout'
+import store from '../store'
 
 Vue.use(VueRouter)
 
@@ -15,8 +15,8 @@ const routes = [
         path: '/home',
         name: 'home',
         component: () => import(/* webpackChunkName: "about" */ '../views/HomeView.vue'),
-      }
-    ]
+      },
+    ],
   },
   {
     path: '/login',
@@ -26,30 +26,35 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/LoginView.vue'),
     meta: {
-      notRequireAuth: true
-    }
-  }
+      notRequireAuth: true,
+    },
+  },
+  {
+    path: '/app/*',
+    name: 'home',
+    component: Layout,
+  },
 ]
 
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes,
 })
 
-router.beforeEach((to,from,next) => {
+router.beforeEach((to, from, next) => {
   if (to.meta.notRequireAuth) {
-    next();
-  }else {
+    next()
+  } else {
     // 确认是否已登录
-    const userInfo = store.state.userInfo;
+    const userInfo = store.state.userInfo
     //1.未登录
     if (!userInfo || !userInfo.userName) {
       return router.replace({
-        path: "/login",
-      });
-    }else {
-      next();
+        path: '/login',
+      })
+    } else {
+      next()
     }
   }
 })
